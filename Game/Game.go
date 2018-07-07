@@ -33,6 +33,7 @@ func (g *Game) Cheat() bool {
 		return false
 	}
 
+	// only cheat a certain times in a row
 	if g.CheatCounter == g.CheatsInARow {
 		g.CheatCounter = 0
 		return false

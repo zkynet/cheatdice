@@ -45,7 +45,7 @@ func main() {
 
 	// cheat settings
 	globalGame.CheatCounter = 0
-	globalGame.FirstCheatRound = 10
+	globalGame.FirstCheatRound = 1
 	globalGame.WinningPercent = 0.7
 	globalGame.CheatsInARow = 2
 
@@ -105,12 +105,13 @@ PROMPTLOOP:
 
 func rollDiceForPlayer(number int) {
 
-	if globalGame.Players[number].IsComputer {
-		if globalGame.Cheat() {
-			// if the player is a computer and it's cheating then we don't need to roll the dice.
-			return
-		}
-	} else {
+	if globalGame.Cheat() {
+		// if the player is a computer and it's cheating then we don't need to roll the dice.
+		return
+	}
+
+	if !globalGame.Players[number].IsComputer {
+		// if the player is not a computer we check for input
 		userInputPrompt()
 	}
 
