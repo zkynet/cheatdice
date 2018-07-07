@@ -1,5 +1,11 @@
 package game
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
 type Game struct {
 	Players              map[int]*Player
 	CurrentRoller        int
@@ -11,6 +17,21 @@ type Game struct {
 	WinningPercent       float64
 	FirstCheatRound      int
 	NumberOfCheatMethods int
+}
+
+func (g *Game) AskPlayerToRoll() {
+	if g.Cheat() {
+		// if the player is a computer and it's cheating then we don't need to roll the dice.
+		return
+	}
+
+	if !g.Players[g.CurrentRoller].IsComputer {
+		// if the player is not a computer we check for input
+		userInputPrompt()
+	}
+
+	g.Players[g.CurrentRoller].ResetDice()
+	g.Players[g.CurrentRoller].RollDice(g.Dice.Max)
 }
 
 func (g *Game) Cheat() bool {
@@ -225,4 +246,33 @@ func (g *Game) CalculateWinRatings() {
 			g.WinRatings[i] = float64(p.Wins) / float64(g.Round)
 		}
 	}
+}
+
+func userInputPrompt() {
+	// do not move outside of loop, this will cause new line(enter) to be read as the next character
+	reader := bufio.NewReader(os.Stdin)
+
+PROMPTLOOP:
+	switch readChar(reader) {
+	case 'R', 'r':
+		return
+	case 'S', 's':
+		os.Exit(1)
+	default:
+		fmt.Println("You pressed something other then r or s, please try again..")
+		goto PROMPTLOOP
+	}
+
+}
+
+func readChar(reader *bufio.Reader) rune {
+READ:
+	char, _, err := reader.ReadRune()
+
+	if err != nil {
+		fmt.Println("An unexcpected error occurred: ", err)
+		goto READ
+	}
+
+	return char
 }

@@ -52,74 +52,35 @@ func main() {
 
 	fmt.Println("Press r to roll the dice or press s to stop the globalGame")
 
-ROUNDSTART:
+	startGame()
+}
+
+func startGame() {
+NEXTROUND:
 	globalGame.Round = globalGame.Round + 1
 	fmt.Println("====================================================")
 	fmt.Println("======== GAME ROUND: ", globalGame.Round, "=========")
 	fmt.Println("====================================================")
-	nextRound()
-	fmt.Println()
-	fmt.Println()
-	fmt.Println()
-	goto ROUNDSTART
-}
 
-func nextRound() {
 	globalGame.ResetAllDice()
-	rollDiceForPlayer(globalGame.CurrentRoller)
+	globalGame.AskPlayerToRoll()
+	// all printing methods are customized outside of the game logic
+	// this allows for more customization
 	printDiceRollForPlayer(globalGame.CurrentRoller)
 	globalGame.SwitchPlayers()
-	rollDiceForPlayer(globalGame.CurrentRoller)
+	globalGame.AskPlayerToRoll()
 	printDiceRollForPlayer(globalGame.CurrentRoller)
+	// the _ variable is the winning player struct, if we wanted to use the game in another program
+	// we would skip printing and just get the winnig player.
 	_, message := globalGame.FindRoundWinner()
 	fmt.Println(message)
 	globalGame.CalculateWinRatings()
 	printStandings()
-}
 
-func userInputPrompt() {
-	// do not move outside of loop, this will cause new line(enter) to be read as the next character
-	reader := bufio.NewReader(os.Stdin)
-
-PROMPTLOOP:
-	switch readChar(reader) {
-	case 'R', 'r':
-		return
-	case 'S', 's':
-		os.Exit(1)
-	default:
-		fmt.Println("You pressed something other then r or s, please try again..")
-		goto PROMPTLOOP
-	}
-
-}
-
-func rollDiceForPlayer(number int) {
-
-	if globalGame.Cheat() {
-		// if the player is a computer and it's cheating then we don't need to roll the dice.
-		return
-	}
-
-	if !globalGame.Players[number].IsComputer {
-		// if the player is not a computer we check for input
-		userInputPrompt()
-	}
-
-	globalGame.Players[number].ResetDice()
-	globalGame.Players[number].RollDice(globalGame.Dice.Max)
-}
-
-func readChar(reader *bufio.Reader) rune {
-READ:
-	char, _, err := reader.ReadRune()
-
-	if err != nil {
-		fmt.Println("An unexcpected error occurred: ", err)
-		goto READ
-	}
-
-	return char
+	fmt.Println()
+	fmt.Println()
+	fmt.Println()
+	goto NEXTROUND
 }
 
 func printDiceRollForPlayer(number int) {
