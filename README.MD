@@ -114,6 +114,47 @@ Win rating: 0.67
 --- PASS: TestWinningPercentage100Rounds (0.00s)
 ```
 
+# Example test suit output
+```
+zkynets-MacBook-Pro:cheatdice zkynet$ go test -v -run TestDiceRoll
+=== RUN   TestDiceRoll3000000TimesMax6
+--- PASS: TestDiceRoll3000000TimesMax6 (2.91s)
+=== RUN   TestDiceRollWithATie
+=== RUN   TestDiceRollWithATie/Players_tie
+=== RUN   TestDiceRollWithATie/Players_tie#01
+--- PASS: TestDiceRollWithATie (0.00s)
+    --- PASS: TestDiceRollWithATie/Players_tie (0.00s)
+    --- PASS: TestDiceRollWithATie/Players_tie#01 (0.00s)
+=== RUN   TestDiceRollWinMethodHighestDice
+=== RUN   TestDiceRollWinMethodHighestDice/Player_0_wins_with_the_highest_dice
+=== RUN   TestDiceRollWinMethodHighestDice/Player_0_wins_with_the_highest_dice#01
+=== RUN   TestDiceRollWinMethodHighestDice/Player_0_wins_with_the_highest_dice#02
+=== RUN   TestDiceRollWinMethodHighestDice/Player_1_wins_with_the_highest_dice
+--- PASS: TestDiceRollWinMethodHighestDice (0.00s)
+    --- PASS: TestDiceRollWinMethodHighestDice/Player_0_wins_with_the_highest_dice (0.00s)
+    --- PASS: TestDiceRollWinMethodHighestDice/Player_0_wins_with_the_highest_dice#01 (0.00s)
+    --- PASS: TestDiceRollWinMethodHighestDice/Player_0_wins_with_the_highest_dice#02 (0.00s)
+    --- PASS: TestDiceRollWinMethodHighestDice/Player_1_wins_with_the_highest_dice (0.00s)
+=== RUN   TestDiceRollWinMethodHigherTotal
+=== RUN   TestDiceRollWinMethodHigherTotal/Player_0_wins_with_a_higher_total
+=== RUN   TestDiceRollWinMethodHigherTotal/Player_1_wins_with_a_higher_total
+--- PASS: TestDiceRollWinMethodHigherTotal (0.00s)
+    --- PASS: TestDiceRollWinMethodHigherTotal/Player_0_wins_with_a_higher_total (0.00s)
+    --- PASS: TestDiceRollWinMethodHigherTotal/Player_1_wins_with_a_higher_total (0.00s)
+=== RUN   TestDiceRollWinMethodDouble
+=== RUN   TestDiceRollWinMethodDouble/Player_0_wins_with_a_double
+=== RUN   TestDiceRollWinMethodDouble/Player_1_wins_with_a_double
+=== RUN   TestDiceRollWinMethodDouble/Player_0_wins_with_a_higher_double
+=== RUN   TestDiceRollWinMethodDouble/Player_1_wins_with_a_higher_double
+--- PASS: TestDiceRollWinMethodDouble (0.00s)
+    --- PASS: TestDiceRollWinMethodDouble/Player_0_wins_with_a_double (0.00s)
+    --- PASS: TestDiceRollWinMethodDouble/Player_1_wins_with_a_double (0.00s)
+    --- PASS: TestDiceRollWinMethodDouble/Player_0_wins_with_a_higher_double (0.00s)
+    --- PASS: TestDiceRollWinMethodDouble/Player_1_wins_with_a_higher_double (0.00s)
+PASS
+ok      github.com/zkynet/cheatdice     2.920s
+```
+
 # Roll log for 100 games 
 ```
 44-34

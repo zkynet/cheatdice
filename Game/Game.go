@@ -203,11 +203,10 @@ func (g *Game) findHighestDice() int {
 			// if the dice value is higher then the current highest value
 			if diceValue > highestDiceValue {
 				// and the dice does not belong to the current highest value owner
-				if highestDiceOwnerIndex != playerIndex {
-					highestDiceValue = diceValue
-					highestDiceOwnerIndex = playerIndex
-					highestDiceCount = 1
-				}
+				highestDiceValue = diceValue
+				highestDiceOwnerIndex = playerIndex
+				highestDiceCount = 1
+
 			}
 
 			// if the dice values are the same
