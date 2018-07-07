@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"testing"
@@ -37,9 +36,9 @@ func loadGame() {
 	globalGame.Players[1] = &computer1
 	globalGame.CheatCounter = 0
 	globalGame.FirstCheatRound = 1
-	globalGame.WinningPercent = 0.9
-	globalGame.CheatsInARow = 0
-	globalGame.NumberOfCheatMethods = 1
+	globalGame.WinningPercent = 0.7
+	globalGame.CheatsInARow = 2
+	globalGame.NumberOfCheatMethods = 3
 }
 
 func TestDiceRoll3000000TimesMax6(t *testing.T) {
@@ -60,7 +59,7 @@ func TestDiceRoll3000000TimesMax6(t *testing.T) {
 	}
 }
 
-func TestWinningPercentage100Rounds(t *testing.T) {
+func TestWinningPercentage100Rounds70WinRating(t *testing.T) {
 
 	f, err := os.OpenFile("100-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
@@ -84,16 +83,16 @@ func TestWinningPercentage100Rounds(t *testing.T) {
 		}
 	}
 
-	//if globalGame.WinRatings[0] < 0.6 || globalGame.WinRatings[0] > 0.8 {
-	//		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
-	//		t.Fail()
-	//	}
+	if globalGame.WinRatings[0] < 0.6 || globalGame.WinRatings[0] > 0.8 {
+		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
+		t.Fail()
+	}
 
-	fmt.Println("Win rating:", globalGame.WinRatings[0])
+	//fmt.Println("Win rating:", globalGame.WinRatings[0])
 
 }
 
-func TestWinningPercentage1000000Rounds(t *testing.T) {
+func TestWinningPercentage1000000Rounds70WinRating(t *testing.T) {
 
 	f, err := os.OpenFile("1000000-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
@@ -117,12 +116,12 @@ func TestWinningPercentage1000000Rounds(t *testing.T) {
 		}
 	}
 
-	//if globalGame.WinRatings[0] < 0.6 || globalGame.WinRatings[0] > 0.8 {
-	//		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
-	//t.Fail()
-	//	}
+	if globalGame.WinRatings[0] < 0.6 || globalGame.WinRatings[0] > 0.8 {
+		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
+		t.Fail()
+	}
 
-	fmt.Println("Win rating:", globalGame.WinRatings[0])
+	//fmt.Println("Win rating:", globalGame.WinRatings[0])
 
 }
 

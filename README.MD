@@ -1,6 +1,9 @@
 # Cheat Dice
 A game of dice against the computer where the computer can be configured to sustain a certain win rate.
 
+# Running the game
+- go run main.go
+
 # How the computer cheats
 ## When it cheats
 The computer will start cheating once it passes the configured "FirstCheatRound". Once it has passed it will only cheat if it is under the set "WinningPercent".
