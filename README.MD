@@ -115,10 +115,9 @@ Win rating: 0.67
 ```
 
 # Example test suit output
-```
-zkynets-MacBook-Pro:cheatdice zkynet$ go test -v -run TestDiceRoll
+```zkynets-MacBook-Pro:cheatdice zkynet$ go test -v --bench=.
 === RUN   TestDiceRoll3000000TimesMax6
---- PASS: TestDiceRoll3000000TimesMax6 (2.91s)
+--- PASS: TestDiceRoll3000000TimesMax6 (2.96s)
 === RUN   TestDiceRollWithATie
 === RUN   TestDiceRollWithATie/Players_tie
 === RUN   TestDiceRollWithATie/Players_tie#01
@@ -151,8 +150,19 @@ zkynets-MacBook-Pro:cheatdice zkynet$ go test -v -run TestDiceRoll
     --- PASS: TestDiceRollWinMethodDouble/Player_1_wins_with_a_double (0.00s)
     --- PASS: TestDiceRollWinMethodDouble/Player_0_wins_with_a_higher_double (0.00s)
     --- PASS: TestDiceRollWinMethodDouble/Player_1_wins_with_a_higher_double (0.00s)
+=== RUN   TestWinningPercentage100Rounds70WinRatingWithIn10Percent
+--- PASS: TestWinningPercentage100Rounds70WinRatingWithIn10Percent (0.00s)
+=== RUN   TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent
+--- PASS: TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent (10.95s)
+=== RUN   TestWinningPercentage1000000Rounds70WinRatingWithIn5Percent
+--- PASS: TestWinningPercentage1000000Rounds70WinRatingWithIn5Percent (3.38s)
+goos: darwin
+goarch: amd64
+pkg: github.com/zkynet/cheatdice
+BenchmarkDiceRoll-4      2000000               960 ns/op
 PASS
-ok      github.com/zkynet/cheatdice     2.920s
+ok      github.com/zkynet/cheatdice     20.172s
+zkynets-MacBook-Pro:cheatdice zkynet$
 ```
 
 # Roll log for 100 games 
