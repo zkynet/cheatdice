@@ -136,7 +136,7 @@ func (g *Game) findHighestDice() int {
 				// but there are different owners
 				highestDiceOwnerIndex != playerIndex {
 				highestDiceCount++
-	}
+			}
 		}
 	}
 
@@ -170,7 +170,8 @@ LOOP:
 	game.Round = game.Round + 1
 	fmt.Println("======== GAME ROUND: ", game.Round, "=========")
 	nextRound()
-	printStandings()
+	_, message := game.AnnounceRoundWinner()
+	fmt.Println(message)
 	fmt.Println("========= END OF ROUND =========")
 	goto LOOP
 }
@@ -186,7 +187,6 @@ func initGame() *Game {
 	}
 
 	computer := Player{
-		Number:         0,
 		Name:           "AlphaDice:)",
 		Wins:           0,
 		Rolls:          0,
@@ -198,7 +198,6 @@ func initGame() *Game {
 	}
 
 	human := Player{
-		Number:     1,
 		Name:       string(name),
 		Wins:       0,
 		Rolls:      0,
