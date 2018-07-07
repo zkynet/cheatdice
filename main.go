@@ -43,7 +43,7 @@ type Dice struct {
 }
 
 func (g *Game) Cheat() bool {
-	return true
+	return false
 }
 func (g *Game) AnnounceRoundWinner() int {
 	// rules
