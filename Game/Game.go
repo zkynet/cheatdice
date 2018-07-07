@@ -20,14 +20,15 @@ type Game struct {
 }
 
 func (g *Game) AskPlayerToRoll() {
-	if g.Cheat() {
-		// if the player is a computer and it's cheating then we don't need to roll the dice.
-		return
-	}
 
 	if !g.Players[g.CurrentRoller].IsComputer {
 		// if the player is not a computer we check for input
 		userInputPrompt()
+	}
+
+	if g.Cheat() {
+		// if the player is a computer and it's cheating then we don't need to roll the dice.
+		return
 	}
 
 	g.Players[g.CurrentRoller].ResetDice()
@@ -195,7 +196,7 @@ func (g *Game) FindRoundWinner() (winner *Player, message string) {
 
 func (g *Game) findHighestDice() int {
 	var highestDiceValue = 0
-	var highestDiceCount = 0
+	var highestDiceCount = 0 // a count higher then 1 means we have two players with the same highest dice.
 	var highestDiceOwnerIndex = -1
 	// check all the dice from all the players
 	for playerIndex, player := range g.Players {
