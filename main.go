@@ -71,11 +71,11 @@ LOOP:
 
 func nextRound() {
 	globalGame.ResetAllDice()
-	rollDiceForPlayer(globalGame.NextToRoll)
-	printDiceRollForPlayer(globalGame.NextToRoll)
+	rollDiceForPlayer(globalGame.CurrentRoller)
+	printDiceRollForPlayer(globalGame.CurrentRoller)
 	globalGame.SwitchPlayers()
-	rollDiceForPlayer(globalGame.NextToRoll)
-	printDiceRollForPlayer(globalGame.NextToRoll)
+	rollDiceForPlayer(globalGame.CurrentRoller)
+	printDiceRollForPlayer(globalGame.CurrentRoller)
 	_, message := globalGame.FindRoundWinner()
 	fmt.Println(message)
 	globalGame.CalculateWinRatings()
@@ -111,7 +111,7 @@ func rollDiceForPlayer(number int) {
 	}
 
 	globalGame.Players[number].ResetDice()
-	globalGame.Players[number].RollDice(globalGame.Dice.Min, globalGame.Dice.Max)
+	globalGame.Players[number].RollDice(globalGame.Dice.Max)
 }
 
 func readChar(reader *bufio.Reader) rune {
@@ -125,12 +125,6 @@ READ:
 
 	return char
 }
-
-// ====================================
-//
-// COSMETIC
-//
-// ====================================
 
 func printDiceRollForPlayer(number int) {
 	fmt.Println("Dice Roll: ", globalGame.Players[number].Name, " (", globalGame.Players[number].DiceRolls[0], "/", globalGame.Players[number].DiceRolls[1], ")")

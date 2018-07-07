@@ -1,27 +1,40 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	game "github.com/zkynet/cheatdice/Game"
+)
 
 func TestMain(t *testing.T) {
 
 }
 
-func TestDiceRoll1000000Times(t *testing.T) {
-	min := 1
+func TestDiceRoll3000000TimesMax6(t *testing.T) {
+	p := game.Player{}
+	p.DiceRolls = make(map[int]int)
 	max := 6
-	for i := 0; i < 1000000; i++ {
-		numb := rollDice(int64(min), int64(max))
-		if int(numb) < min || int(numb) > max {
-			t.Error("Expected a roll between ", min, "and", max, " but got :", numb)
+	for i := 0; i < 3000000; i++ {
+		p.ResetDice()
+		p.RollDice(max)
+		if p.DiceRolls[0] > max {
+			t.Error("Expected a roll lower then", max, " but got :", p.DiceRolls[0])
+			t.Fail()
+		}
+		if p.DiceRolls[1] > max {
+			t.Error("Expected a roll lower then", max, " but got :", p.DiceRolls[1])
 			t.Fail()
 		}
 	}
 }
 
 func BenchmarkDiceRoll(b *testing.B) {
-	min := 1
+
 	max := 6
+	p := game.Player{}
+	p.DiceRolls = make(map[int]int)
+
 	for n := 0; n < b.N; n++ {
-		_ = rollDice(int64(min), int64(max))
+		p.RollDice(max)
 	}
 }

@@ -6,7 +6,7 @@ import (
 
 type Game struct {
 	Players        map[int]*Player
-	NextToRoll     int
+	CurrentRoller  int
 	Round          int
 	Dice           *Dice
 	WinRatings     map[int]float64
@@ -21,13 +21,37 @@ func (g *Game) Cheat() bool {
 		return false
 	}
 
+	currentRoller := g.Players[g.CurrentRoller]
 	// do not do anything if the player is not a cheater
-	if !g.Players[g.NextToRoll].IsCheater {
+	if !currentRoller.IsCheater {
 		return false
 	}
 
-	if g.WinRatings[g.NextToRoll] < g.WinningPercent {
-		fmt.Println("we should cheat now !")
+	// if we are above the winning percentile we do not cheat
+	if g.WinRatings[g.CurrentRoller] > g.WinningPercent {
+		return false
+	}
+
+	// roll a dice to determine which method we will cheat with
+	g.Players[g.CurrentRoller].RollDice(3)
+	switch currentRoller.DiceRolls[0] {
+	// win with a double
+	case 1:
+		fmt.Println("cheating with a double")
+		currentRoller.RollDice(6)
+		currentRoller.DiceRolls[0] = currentRoller.DiceRolls[1]
+		break
+	// win with a higher total
+	case 2:
+		fmt.Println("cheating with a high total")
+		currentRoller.RollDice(6)
+		break
+	// win with highest dice
+	case 3:
+		fmt.Println("cheating with the highest dice")
+		currentRoller.RollDice(6)
+		currentRoller.DiceRolls[0] = 6
+		break
 	}
 
 	return true
@@ -40,10 +64,10 @@ func (g *Game) ResetAllDice() {
 }
 
 func (g *Game) SwitchPlayers() {
-	if g.NextToRoll == 0 {
-		g.NextToRoll = 1
+	if g.CurrentRoller == 0 {
+		g.CurrentRoller = 1
 	} else {
-		g.NextToRoll = 0
+		g.CurrentRoller = 0
 	}
 
 }
@@ -83,11 +107,15 @@ func (g *Game) FindRoundWinner() (winner *Player, message string) {
 			message = "Player " + winner.Name + " won with a higher double"
 			return
 		}
-		// if player1 has a bigger double
-		winner = g.Players[1]
-		winner.Wins++
-		message = "Player " + winner.Name + " won with a higher double"
-		return
+
+		if player0Dice0 < player1Dice0 {
+			// if player1 has a bigger double
+			winner = g.Players[1]
+			winner.Wins++
+			message = "Player " + winner.Name + " won with a higher double"
+			return
+		}
+
 	}
 
 	// player 1 has a higher total
@@ -161,12 +189,11 @@ func (g *Game) findHighestDice() int {
 
 func (g *Game) InitGame() {
 
-	g.NextToRoll = 0
+	g.CurrentRoller = 0
 	g.Round = 0
 	g.Players = make(map[int]*Player)
 	g.WinRatings = make(map[int]float64)
 	g.Dice = &Dice{
-		Min: 1,
 		Max: 6,
 	}
 
