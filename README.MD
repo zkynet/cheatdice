@@ -1,6 +1,9 @@
 # Cheat Dice
 A game of dice against the computer where the computer can be configured to sustain a certain win rate.
 
+# Installing 
+- go get github.com/zkynet/cheatdice
+
 # Running the game
 - go run main.go
 
