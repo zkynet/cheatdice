@@ -9,16 +9,15 @@ A game of dice against the computer where the computer can be configured to sust
 The computer will start cheating once it passes the configured "FirstCheatRound". Once it has passed it will only cheat if it is under the set "WinningPercent".
 ## How it cheats
 When it is the computers turn, it will roll a dice (dice inception intended) to determine one of three methods it can use to cheat. 
-- The first method ( Dou    ble )
+- The first method ( Double )
     - The computer performs a normal roll but will then set one dice to be equal to the other.
 - The Second method ( Highest total )
     - the computer performs a normall roll but wil then check if any dice are lower then 3, if they are the set them to 3. Once both dice have been checked and possibly raised above 3, they get +1 to their value.
 - The third method ( Highest Dice )
-    - The computer performs a normall roll but then set's once dice to be equal to 6
+    - The computer performs a normall roll but then set's once dice to be equal to 5. I thought about using 6 here but the density of sixes in the roll log was too high with that setting. 5 seemed to fit better and still produce optimal win rates. 
 ## Why it seems random
 1. This kind of cheating does not rely on reading the apponents dice, thus there is no 1-1 relation between the human dice roll and the cheat methods.
-2. With multiple cheat methods it get's increasingly difficult to detect patterns
-3. The cheating interval, win percentage and number of cheating method can be adjusted for each game. This makes it even more difficult to detect if optimized properly. 
+2. The cheating interval, win percentage and number of cheating method can be adjusted for each game. This makes it even more difficult to detect if optimized properly. 
 
 # How to adjust cheat rate
 ```
@@ -114,104 +113,104 @@ Win rating: 0.67
 
 # Roll log for 100 games 
 ```
-33-46
-36-11
-44-41
-62-16
-13-11
-64-11
-33-23
-44-26
-33-64
-11-42
-61-41
-24-61
-66-54
-63-32
-54-24
-66-26
-63-45
-62-63
-64-34
-31-61
-65-66
-65-55
-62-42
-45-25
-46-16
-11-23
-65-56
-65-22
-62-54
+44-34
+33-24
+24-44
+11-31
+31-45
+22-45
+56-33
+44-64
+61-23
+52-55
+56-14
+42-21
+44-11
+45-26
+66-13
 64-22
-61-32
-64-23
-44-54
-11-53
-55-15
-55-31
-63-31
-46-64
-44-51
-66-65
-46-16
-64-26
-55-31
-65-13
-56-61
-32-51
-66-62
-63-22
-44-66
-63-13
-45-51
-66-12
-55-62
-22-24
-32-62
-66-16
-66-44
-32-46
-61-25
-61-31
-65-31
-35-21
-14-51
-33-66
-66-65
-65-52
-33-53
-45-56
-66-31
-65-55
-22-52
-61-35
-63-61
+62-51
+25-24
+45-54
+54-36
+53-54
+46-33
+45-65
+56-41
+34-64
 64-24
-45-56
-65-41
-11-21
-61-16
-22-43
-64-55
-62-32
-33-44
-63-13
-62-46
-66-51
-46-13
+66-46
+33-11
+52-16
+66-24
+45-24
+45-46
+64-61
+45-16
+64-25
+66-21
+34-22
+46-22
+56-42
+52-46
+44-42
+33-14
+23-65
+55-34
+54-25
+45-34
+44-53
+64-53
+62-41
+22-25
+66-12
+14-56
+64-46
+53-44
+46-14
+44-22
+45-32
+35-11
+44-56
+46-43
+63-63
+52-45
 64-11
-64-55
-22-62
-61-44
-64-15
-64-23
-56-53
-44-51
-55-24
-64-11
-55-45
-44-61
+56-64
+56-24
+64-52
+62-11
+51-45
+56-51
+14-12
+66-31
+56-45
+42-32
+56-52
+11-61
+55-61
+66-22
+45-61
+65-54
+56-43
+22-65
+22-22
+51-25
+44-64
+25-41
+44-33
+56-22
+26-31
+52-31
 66-55
-62-64
+43-41
+64-13
+46-65
+34-52
+55-16
+22-36
+12-41
+54-46
+54-42
+61-51
 ```
