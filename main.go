@@ -48,20 +48,11 @@ func main() {
 	globalGame.FirstCheatRound = 1
 	globalGame.WinningPercent = 0.7
 	globalGame.CheatsInARow = 2
+	globalGame.NumberOfCheatMethods = 3
 
-	// globalGame loop
-	// 1. read input
-	// 1.1 if it is the computers turn we need to analyze score and determine if we need to cheat
-	// -- if we cheat we can only do it when the player goes first
-	// -- needs to win X percent of globalGames
-	// -- can never cheat three in a row
-	// 2. roll or stop
-	// 3.
-
-	fmt.Println(globalGame)
 	fmt.Println("Press r to roll the dice or press s to stop the globalGame")
 
-LOOP:
+ROUNDSTART:
 	globalGame.Round = globalGame.Round + 1
 	fmt.Println("====================================================")
 	fmt.Println("======== GAME ROUND: ", globalGame.Round, "=========")
@@ -70,7 +61,7 @@ LOOP:
 	fmt.Println()
 	fmt.Println()
 	fmt.Println()
-	goto LOOP
+	goto ROUNDSTART
 }
 
 func nextRound() {
@@ -136,9 +127,7 @@ func printDiceRollForPlayer(number int) {
 }
 
 func printStandings() {
-
 	fmt.Println("=== Current standings ===")
 	fmt.Println(globalGame.Players[0].Name, " has ", globalGame.Players[0].Wins, "wins witha win rating of", globalGame.WinRatings[0])
 	fmt.Println(globalGame.Players[1].Name, " has ", globalGame.Players[1].Wins, "wins witha win rating of", globalGame.WinRatings[1])
-
 }

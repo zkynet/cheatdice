@@ -1,13 +1,45 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	"strconv"
 	"testing"
 
 	game "github.com/zkynet/cheatdice/Game"
 )
 
 func TestMain(t *testing.T) {
+	loadGame()
+}
 
+func loadGame() {
+	computer0 := game.Player{
+		Name:       "AlphaDice0",
+		Wins:       0,
+		Rolls:      0,
+		IsComputer: true,
+		IsCheater:  true,
+		DiceRolls:  make(map[int]int),
+	}
+
+	computer1 := game.Player{
+		Name:       "AlphaDice1",
+		Wins:       0,
+		Rolls:      0,
+		IsComputer: true,
+		IsCheater:  false,
+		DiceRolls:  make(map[int]int),
+	}
+	globalGame = &game.Game{}
+	globalGame.InitGame()
+	globalGame.Players[0] = &computer0
+	globalGame.Players[1] = &computer1
+	globalGame.CheatCounter = 0
+	globalGame.FirstCheatRound = 1
+	globalGame.WinningPercent = 0.9
+	globalGame.CheatsInARow = 0
+	globalGame.NumberOfCheatMethods = 1
 }
 
 func TestDiceRoll3000000TimesMax6(t *testing.T) {
@@ -26,6 +58,72 @@ func TestDiceRoll3000000TimesMax6(t *testing.T) {
 			t.Fail()
 		}
 	}
+}
+
+func TestWinningPercentage100Rounds(t *testing.T) {
+
+	f, err := os.OpenFile("100-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	for i := 0; i < 100; i++ {
+		globalGame.Round = globalGame.Round + 1
+		globalGame.ResetAllDice()
+		rollDiceForPlayer(globalGame.CurrentRoller)
+		globalGame.SwitchPlayers()
+		rollDiceForPlayer(globalGame.CurrentRoller)
+		_, _ = globalGame.FindRoundWinner()
+		globalGame.CalculateWinRatings()
+
+		text := strconv.Itoa(globalGame.Players[0].DiceRolls[0]) + strconv.Itoa(globalGame.Players[0].DiceRolls[1]) + "-" + strconv.Itoa(globalGame.Players[1].DiceRolls[0]) + strconv.Itoa(globalGame.Players[1].DiceRolls[1]) + "\n"
+		if _, err = f.WriteString(text); err != nil {
+			panic(err)
+		}
+	}
+
+	//if globalGame.WinRatings[0] < 0.6 || globalGame.WinRatings[0] > 0.8 {
+	//		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
+	//		t.Fail()
+	//	}
+
+	fmt.Println("Win rating:", globalGame.WinRatings[0])
+
+}
+
+func TestWinningPercentage1000000Rounds(t *testing.T) {
+
+	f, err := os.OpenFile("1000000-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	for i := 0; i < 1000000; i++ {
+		globalGame.Round = globalGame.Round + 1
+		globalGame.ResetAllDice()
+		rollDiceForPlayer(globalGame.CurrentRoller)
+		globalGame.SwitchPlayers()
+		rollDiceForPlayer(globalGame.CurrentRoller)
+		_, _ = globalGame.FindRoundWinner()
+		globalGame.CalculateWinRatings()
+
+		text := strconv.Itoa(globalGame.Players[0].DiceRolls[0]) + strconv.Itoa(globalGame.Players[0].DiceRolls[1]) + "-" + strconv.Itoa(globalGame.Players[1].DiceRolls[0]) + strconv.Itoa(globalGame.Players[1].DiceRolls[1]) + "\n"
+		if _, err = f.WriteString(text); err != nil {
+			panic(err)
+		}
+	}
+
+	//if globalGame.WinRatings[0] < 0.6 || globalGame.WinRatings[0] > 0.8 {
+	//		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
+	//t.Fail()
+	//	}
+
+	fmt.Println("Win rating:", globalGame.WinRatings[0])
+
 }
 
 func BenchmarkDiceRoll(b *testing.B) {

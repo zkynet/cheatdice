@@ -1,19 +1,16 @@
 package game
 
-import (
-	"fmt"
-)
-
 type Game struct {
-	Players         map[int]*Player
-	CurrentRoller   int
-	Round           int
-	Dice            *Dice
-	WinRatings      map[int]float64
-	CheatCounter    int
-	CheatsInARow    int
-	WinningPercent  float64
-	FirstCheatRound int
+	Players              map[int]*Player
+	CurrentRoller        int
+	Round                int
+	Dice                 *Dice
+	WinRatings           map[int]float64
+	CheatCounter         int
+	CheatsInARow         int
+	WinningPercent       float64
+	FirstCheatRound      int
+	NumberOfCheatMethods int
 }
 
 func (g *Game) Cheat() bool {
@@ -34,40 +31,49 @@ func (g *Game) Cheat() bool {
 	}
 
 	// only cheat a certain times in a row
-	if g.CheatCounter == g.CheatsInARow {
+	if g.CheatCounter == g.CheatsInARow && g.CheatsInARow != 0 {
 		g.CheatCounter = 0
 		return false
 	}
 
 	// roll a dice to determine which method we will cheat with
-	g.Players[g.CurrentRoller].RollDice(3)
+	g.Players[g.CurrentRoller].RollDice(g.NumberOfCheatMethods)
 	switch currentRoller.DiceRolls[0] {
 	// win with a double
 	case 1:
-		fmt.Println(currentRoller.Name, " is cheating with a double")
+		//fmt.Println(currentRoller.Name, " is cheating with a double")
 		currentRoller.RollDice(6)
 		currentRoller.DiceRolls[0] = currentRoller.DiceRolls[1]
 		break
 	// win with a higher total
 	case 2:
-		fmt.Println(currentRoller.Name, " is cheating with a high total")
+		//fmt.Println(currentRoller.Name, " is cheating with a high total")
 		currentRoller.RollDice(6)
-		if currentRoller.DiceRolls[0] < 4 {
+		if currentRoller.DiceRolls[0] < 3 {
+			currentRoller.DiceRolls[0] = 3
+		}
+		if currentRoller.DiceRolls[1] < 3 {
+			currentRoller.DiceRolls[1] = 3
+		}
+		if currentRoller.DiceRolls[0] < 6 {
 			currentRoller.DiceRolls[0]++
 		}
-		if currentRoller.DiceRolls[1] < 4 {
+		if currentRoller.DiceRolls[1] < 6 {
 			currentRoller.DiceRolls[1]++
 		}
 		break
 	// win with highest dice
 	case 3:
-		fmt.Println(currentRoller.Name, " is cheating with the highest dice")
+		//fmt.Println(currentRoller.Name, " is cheating with the highest dice")
 		currentRoller.RollDice(6)
 		currentRoller.DiceRolls[0] = 6
 		break
 	}
 
-	g.CheatCounter++
+	// we do not want this counter running if we can cheat endlessly
+	if g.CheatsInARow != 0 {
+		g.CheatCounter++
+	}
 	return true
 }
 
