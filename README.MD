@@ -115,7 +115,8 @@ Win rating: 0.67
 ```
 
 # Example test suit output
-```zkynets-MacBook-Pro:cheatdice zkynet$ go test -v --bench=.
+```
+zkynets-MacBook-Pro:cheatdice zkynet$ go test -v --bench=.
 === RUN   TestDiceRoll3000000TimesMax6
 --- PASS: TestDiceRoll3000000TimesMax6 (2.96s)
 === RUN   TestDiceRollWithATie
