@@ -5,19 +5,20 @@ import (
 )
 
 type Game struct {
-	Players        map[int]*Player
-	CurrentRoller  int
-	Round          int
-	Dice           *Dice
-	WinRatings     map[int]float64
-	CheatCounter   int
-	WinningPercent float64
-	CheatOnRound   int
+	Players         map[int]*Player
+	CurrentRoller   int
+	Round           int
+	Dice            *Dice
+	WinRatings      map[int]float64
+	CheatCounter    int
+	CheatsInARow    int
+	WinningPercent  float64
+	FirstCheatRound int
 }
 
 func (g *Game) Cheat() bool {
 	// only start cheating after ten rounds
-	if g.Round < g.CheatOnRound {
+	if g.Round < g.FirstCheatRound {
 		return false
 	}
 
@@ -32,28 +33,40 @@ func (g *Game) Cheat() bool {
 		return false
 	}
 
+	if g.CheatCounter == g.CheatsInARow {
+		g.CheatCounter = 0
+		return false
+	}
+
 	// roll a dice to determine which method we will cheat with
 	g.Players[g.CurrentRoller].RollDice(3)
 	switch currentRoller.DiceRolls[0] {
 	// win with a double
 	case 1:
-		fmt.Println("cheating with a double")
+		fmt.Println(currentRoller.Name, " is cheating with a double")
 		currentRoller.RollDice(6)
 		currentRoller.DiceRolls[0] = currentRoller.DiceRolls[1]
 		break
 	// win with a higher total
 	case 2:
-		fmt.Println("cheating with a high total")
+		fmt.Println(currentRoller.Name, " is cheating with a high total")
 		currentRoller.RollDice(6)
+		if currentRoller.DiceRolls[0] < 4 {
+			currentRoller.DiceRolls[0]++
+		}
+		if currentRoller.DiceRolls[1] < 4 {
+			currentRoller.DiceRolls[1]++
+		}
 		break
 	// win with highest dice
 	case 3:
-		fmt.Println("cheating with the highest dice")
+		fmt.Println(currentRoller.Name, " is cheating with the highest dice")
 		currentRoller.RollDice(6)
 		currentRoller.DiceRolls[0] = 6
 		break
 	}
 
+	g.CheatCounter++
 	return true
 }
 

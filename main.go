@@ -45,8 +45,9 @@ func main() {
 
 	// cheat settings
 	globalGame.CheatCounter = 0
-	globalGame.CheatOnRound = 10
+	globalGame.FirstCheatRound = 10
 	globalGame.WinningPercent = 0.7
+	globalGame.CheatsInARow = 2
 
 	// globalGame loop
 	// 1. read input
@@ -66,6 +67,9 @@ LOOP:
 	fmt.Println("======== GAME ROUND: ", globalGame.Round, "=========")
 	fmt.Println("====================================================")
 	nextRound()
+	fmt.Println()
+	fmt.Println()
+	fmt.Println()
 	goto LOOP
 }
 
