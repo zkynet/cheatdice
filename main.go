@@ -45,37 +45,108 @@ type Dice struct {
 func (g *Game) Cheat() bool {
 	return false
 }
-func (g *Game) AnnounceRoundWinner() int {
-	// rules
-	// 1. double or higher double wins.
+func (g *Game) AnnounceRoundWinner() (winner *Player, message string) {
+
 	// Set some variables for readability
 	player0Dice0 := game.Players[0].Dice[0]
 	player0Dice1 := game.Players[0].Dice[1]
 	player1Dice0 := game.Players[1].Dice[0]
 	player1Dice1 := game.Players[1].Dice[1]
+	player1total := player1Dice0 + player1Dice1
+	player0total := player0Dice0 + player0Dice1
 
 	// if player 0 has a double and player 1 does not
 	if player0Dice0 == player0Dice1 && player1Dice0 != player1Dice1 {
-		return game.Players[0].Number
+		winner = game.Players[0]
+		message = "Player " + winner.Name + " won with a double"
+		return
 	}
 
 	// if player 1 has a double and player 0 does not
 	if player1Dice0 == player1Dice1 && player0Dice0 != player0Dice1 {
-		return game.Players[1].Number
+		winner = game.Players[1]
+		message = "Player " + winner.Name + " won with a double"
+		return
 	}
 
 	// if both players have doubles
-	if game.Players[1].Dice[0] == game.Players[1].Dice[1] &&
-		game.Players[0].Dice[0] == game.Players[0].Dice[1] {
-			if game.Players[1].Dice[0]
-		return game.Players[1].Number
+	if player1Dice0 == player1Dice1 && player0Dice0 == player0Dice1 {
+		if player0Dice0 > player1Dice0 {
+			// if player0 has a bigger double
+			winner = game.Players[0]
+			message = "Player " + winner.Name + " won with a higher double"
+			return
+		}
+		// if player1 has a bigger double
+		winner = game.Players[1]
+		message = "Player " + winner.Name + " won with a higher double"
+		return
 	}
 
-	// 2. higher total wins
-	// 3. highest number wins if total is the same
-	// 4. draw, no points.
+	// player 1 has a higher total
+	if player1total > player0total {
+		winner = game.Players[1]
+		message = "Player " + winner.Name + " won with a higher total"
+		return
+	}
 
-	fmt.Println(winner)
+	// Player 0 has a higher total
+	if player1total < player0total {
+		winner = game.Players[0]
+		message = "Player " + winner.Name + " won with a higher total"
+		return
+	}
+
+	// If both players have the same totals
+	if player1total == player0total {
+		highestPlayer := game.findHighestDice()
+		// -1 means a tie, anything higher then that represents a player index number
+		if highestPlayer > -1 {
+			winner = game.Players[highestPlayer]
+			message = "Player " + winner.Name + " won with the highest dice"
+			return
+		}
+	}
+
+	// The game ended in a draw!
+	winner = nil
+	message = "The game was a tie"
+	return
+}
+
+func (g *Game) findHighestDice() int {
+	var highestDiceValue = 0
+	var highestDiceCount = 0
+	var highestDiceOwnerIndex = -1
+	// check all the dice from all the players
+	for playerIndex, player := range game.Players {
+		for _, diceValue := range player.Dice {
+			// if the dice value is higher then the current highest value
+			if diceValue > highestDiceValue {
+				// and the dice does not belong to the current highest value owner
+				if highestDiceOwnerIndex != playerIndex {
+					highestDiceValue = diceValue
+					highestDiceOwnerIndex = playerIndex
+					highestDiceCount = 1
+				}
+			}
+
+			// if the dice values are the same
+			if diceValue == highestDiceValue &&
+				// but there are different owners
+				highestDiceOwnerIndex != playerIndex {
+				highestDiceCount++
+	}
+		}
+	}
+
+	if highestDiceCount > 1 {
+		// if we have more then one player with the same highest dice count we have a tie
+		return -1
+	}
+
+	return highestDiceOwnerIndex
+
 }
 
 // global game struct .. etc ..
