@@ -7,6 +7,17 @@ A game of dice against the computer where the computer can be configured to sust
 # Running the game
 - go run main.go
 
+# Game rules
+1. The game is divided into “rounds.” During each round, each player gets one “turn.”
+2. On a turn the player rolls two six-sided dice.
+3. The player wins the round that gets a double (or higher double if both get doubles). If neither player
+gets a double then the higher total wins. If they both have the same total, then the player with the
+highest number on a die wins. If they both rolled the same numbers on their dice then the round is a
+draw and neither player gets a point.
+4. On the next round the two players switch turns, i.e. the second one to roll becomes the first one to roll
+and vice versa.
+5. The rounds continue until the human player decides to quit.
+
 # How the computer cheats
 ## When it cheats
 The computer will start cheating once it passes the configured "FirstCheatRound". Once it has passed it will only cheat if it is under the set "WinningPercent".
