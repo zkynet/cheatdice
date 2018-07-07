@@ -45,7 +45,7 @@ type Dice struct {
 func (g *Game) Cheat() bool {
 	return false
 }
-func (g *Game) AnnounceRoundWinner() (winner *Player, message string) {
+func (g *Game) FindRoundWinner() (winner *Player, message string) {
 
 	// Set some variables for readability
 	player0Dice0 := game.Players[0].Dice[0]
@@ -170,7 +170,7 @@ LOOP:
 	game.Round = game.Round + 1
 	fmt.Println("======== GAME ROUND: ", game.Round, "=========")
 	nextRound()
-	_, message := game.AnnounceRoundWinner()
+	_, message := game.FindRoundWinner()
 	fmt.Println(message)
 	fmt.Println("========= END OF ROUND =========")
 	goto LOOP
