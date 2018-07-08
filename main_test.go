@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-	"strconv"
 	"testing"
 
 	game "github.com/zkynet/cheatdice/Game"
@@ -10,21 +8,21 @@ import (
 
 func newGame() {
 	computer0 := game.Player{
-		Name:       "AlphaDice0",
-		Wins:       0,
-		Rolls:      0,
-		IsComputer: true,
-		IsCheater:  true,
-		DiceRolls:  make(map[int]int),
+		Name:        "AlphaDice0",
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   true,
+		CurrentDice: make(map[int]int),
 	}
 
 	computer1 := game.Player{
-		Name:       "AlphaDice1",
-		Wins:       0,
-		Rolls:      0,
-		IsComputer: true,
-		IsCheater:  false,
-		DiceRolls:  make(map[int]int),
+		Name:        "AlphaDice1",
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   false,
+		CurrentDice: make(map[int]int),
 	}
 	globalGame = &game.Game{}
 	globalGame.InitGame()
@@ -39,17 +37,17 @@ func newGame() {
 
 func TestDiceRoll3000000TimesMax6(t *testing.T) {
 	p := game.Player{}
-	p.DiceRolls = make(map[int]int)
+	p.CurrentDice = make(map[int]int)
 	max := 6
 	for i := 0; i < 3000000; i++ {
 		p.ResetDice()
 		p.RollDice(max)
-		if p.DiceRolls[0] > max {
-			t.Error("Expected a roll lower then", max, " but got :", p.DiceRolls[0])
+		if p.CurrentDice[0] > max {
+			t.Error("Expected a roll lower then", max, " but got :", p.CurrentDice[0])
 			t.Fail()
 		}
-		if p.DiceRolls[1] > max {
-			t.Error("Expected a roll lower then", max, " but got :", p.DiceRolls[1])
+		if p.CurrentDice[1] > max {
+			t.Error("Expected a roll lower then", max, " but got :", p.CurrentDice[1])
 			t.Fail()
 		}
 	}
@@ -77,10 +75,10 @@ func TestDiceRollWithATie(t *testing.T) {
 	newGame()
 
 	t.Run("Players tie", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 2
-		globalGame.Players[0].DiceRolls[1] = 3
-		globalGame.Players[1].DiceRolls[0] = 2
-		globalGame.Players[1].DiceRolls[1] = 3
+		globalGame.Players[0].CurrentDice[0] = 2
+		globalGame.Players[0].CurrentDice[1] = 3
+		globalGame.Players[1].CurrentDice[0] = 2
+		globalGame.Players[1].CurrentDice[1] = 3
 
 		winner, message := globalGame.FindRoundWinner()
 		if winner != nil {
@@ -89,10 +87,10 @@ func TestDiceRollWithATie(t *testing.T) {
 	})
 
 	t.Run("Players tie", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 4
-		globalGame.Players[0].DiceRolls[1] = 4
-		globalGame.Players[1].DiceRolls[0] = 4
-		globalGame.Players[1].DiceRolls[1] = 4
+		globalGame.Players[0].CurrentDice[0] = 4
+		globalGame.Players[0].CurrentDice[1] = 4
+		globalGame.Players[1].CurrentDice[0] = 4
+		globalGame.Players[1].CurrentDice[1] = 4
 
 		winner, message := globalGame.FindRoundWinner()
 		if winner != nil {
@@ -106,40 +104,40 @@ func TestDiceRollWinMethodHighestDice(t *testing.T) {
 	newGame()
 
 	t.Run("Player 0 wins with the highest dice", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 4
-		globalGame.Players[1].DiceRolls[0] = 3
-		globalGame.Players[1].DiceRolls[1] = 2
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 4
+		globalGame.Players[1].CurrentDice[0] = 3
+		globalGame.Players[1].CurrentDice[1] = 2
 
 		winner, message := globalGame.FindRoundWinner()
 		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with the highest dice")
 	})
 
 	t.Run("Player 0 wins with the highest dice", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 5
-		globalGame.Players[1].DiceRolls[0] = 4
-		globalGame.Players[1].DiceRolls[1] = 2
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 5
+		globalGame.Players[1].CurrentDice[0] = 4
+		globalGame.Players[1].CurrentDice[1] = 2
 
 		winner, message := globalGame.FindRoundWinner()
 		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with the highest dice")
 	})
 
 	t.Run("Player 0 wins with the highest dice", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 6
-		globalGame.Players[1].DiceRolls[0] = 5
-		globalGame.Players[1].DiceRolls[1] = 2
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 6
+		globalGame.Players[1].CurrentDice[0] = 5
+		globalGame.Players[1].CurrentDice[1] = 2
 
 		winner, message := globalGame.FindRoundWinner()
 		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with the highest dice")
 	})
 
 	t.Run("Player 1 wins with the highest dice", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 2
-		globalGame.Players[0].DiceRolls[1] = 3
-		globalGame.Players[1].DiceRolls[0] = 1
-		globalGame.Players[1].DiceRolls[1] = 4
+		globalGame.Players[0].CurrentDice[0] = 2
+		globalGame.Players[0].CurrentDice[1] = 3
+		globalGame.Players[1].CurrentDice[0] = 1
+		globalGame.Players[1].CurrentDice[1] = 4
 
 		winner, message := globalGame.FindRoundWinner()
 		testDiceOutcome(t, winner, message, globalGame.Players[1].Name, "Player "+globalGame.Players[1].Name+" won with the highest dice")
@@ -149,20 +147,20 @@ func TestDiceRollWinMethodHigherTotal(t *testing.T) {
 	newGame()
 
 	t.Run("Player 0 wins with a higher total", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 3
-		globalGame.Players[1].DiceRolls[0] = 1
-		globalGame.Players[1].DiceRolls[1] = 2
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 3
+		globalGame.Players[1].CurrentDice[0] = 1
+		globalGame.Players[1].CurrentDice[1] = 2
 
 		winner, message := globalGame.FindRoundWinner()
 		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with a higher total")
 	})
 
 	t.Run("Player 1 wins with a higher total", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 2
-		globalGame.Players[1].DiceRolls[0] = 1
-		globalGame.Players[1].DiceRolls[1] = 3
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 2
+		globalGame.Players[1].CurrentDice[0] = 1
+		globalGame.Players[1].CurrentDice[1] = 3
 
 		winner, message := globalGame.FindRoundWinner()
 		testDiceOutcome(t, winner, message, globalGame.Players[1].Name, "Player "+globalGame.Players[1].Name+" won with a higher total")
@@ -172,55 +170,55 @@ func TestDiceRollWinMethodDouble(t *testing.T) {
 	newGame()
 
 	t.Run("Player 0 wins with a double", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 1
-		globalGame.Players[1].DiceRolls[0] = 1
-		globalGame.Players[1].DiceRolls[1] = 2
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 1
+		globalGame.Players[1].CurrentDice[0] = 1
+		globalGame.Players[1].CurrentDice[1] = 2
 
 		winner, message := globalGame.FindRoundWinner()
-		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with a double")
+		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with the biggest double")
 	})
 
 	t.Run("Player 1 wins with a double", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 2
-		globalGame.Players[1].DiceRolls[0] = 1
-		globalGame.Players[1].DiceRolls[1] = 1
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 2
+		globalGame.Players[1].CurrentDice[0] = 1
+		globalGame.Players[1].CurrentDice[1] = 1
 
 		winner, message := globalGame.FindRoundWinner()
-		testDiceOutcome(t, winner, message, globalGame.Players[1].Name, "Player "+globalGame.Players[1].Name+" won with a double")
+		testDiceOutcome(t, winner, message, globalGame.Players[1].Name, "Player "+globalGame.Players[1].Name+" won with the biggest double")
 	})
 
 	t.Run("Player 0 wins with a higher double", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 2
-		globalGame.Players[0].DiceRolls[1] = 2
-		globalGame.Players[1].DiceRolls[0] = 1
-		globalGame.Players[1].DiceRolls[1] = 1
+		globalGame.Players[0].CurrentDice[0] = 2
+		globalGame.Players[0].CurrentDice[1] = 2
+		globalGame.Players[1].CurrentDice[0] = 1
+		globalGame.Players[1].CurrentDice[1] = 1
 
 		winner, message := globalGame.FindRoundWinner()
-		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with a higher double")
+		testDiceOutcome(t, winner, message, globalGame.Players[0].Name, "Player "+globalGame.Players[0].Name+" won with the biggest double")
 	})
 
 	t.Run("Player 1 wins with a higher double", func(t *testing.T) {
-		globalGame.Players[0].DiceRolls[0] = 1
-		globalGame.Players[0].DiceRolls[1] = 1
-		globalGame.Players[1].DiceRolls[0] = 2
-		globalGame.Players[1].DiceRolls[1] = 2
+		globalGame.Players[0].CurrentDice[0] = 1
+		globalGame.Players[0].CurrentDice[1] = 1
+		globalGame.Players[1].CurrentDice[0] = 2
+		globalGame.Players[1].CurrentDice[1] = 2
 
 		winner, message := globalGame.FindRoundWinner()
-		testDiceOutcome(t, winner, message, globalGame.Players[1].Name, "Player "+globalGame.Players[1].Name+" won with a higher double")
+		testDiceOutcome(t, winner, message, globalGame.Players[1].Name, "Player "+globalGame.Players[1].Name+" won with the biggest double")
 	})
 
 }
 
 func TestWinningPercentage100Rounds70WinRatingWithIn10Percent(t *testing.T) {
 	newGame()
-	f, err := os.OpenFile("100-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-	if err != nil {
-		panic(err)
-	}
+	//f, err := os.OpenFile("100-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	defer f.Close()
+	//defer f.Close()
 
 	for i := 0; i < 100; i++ {
 		globalGame.Round = globalGame.Round + 1
@@ -231,10 +229,10 @@ func TestWinningPercentage100Rounds70WinRatingWithIn10Percent(t *testing.T) {
 		_, _ = globalGame.FindRoundWinner()
 		globalGame.CalculateWinRatings()
 
-		text := strconv.Itoa(globalGame.Players[0].DiceRolls[0]) + strconv.Itoa(globalGame.Players[0].DiceRolls[1]) + "-" + strconv.Itoa(globalGame.Players[1].DiceRolls[0]) + strconv.Itoa(globalGame.Players[1].DiceRolls[1]) + "\n"
-		if _, err = f.WriteString(text); err != nil {
-			panic(err)
-		}
+		//text := strconv.Itoa(globalGame.Players[0].CurrentDice[0]) + strconv.Itoa(globalGame.Players[0].CurrentDice[1]) + "-" + strconv.Itoa(globalGame.Players[1].CurrentDice[0]) + strconv.Itoa(globalGame.Players[1].CurrentDice[1]) + "\n"
+		//if _, err = f.WriteString(text); err != nil {
+		//	panic(err)
+		//}
 	}
 
 	if globalGame.WinRatings[0] < 0.60 || globalGame.WinRatings[0] > 0.80 {
@@ -248,12 +246,12 @@ func TestWinningPercentage100Rounds70WinRatingWithIn10Percent(t *testing.T) {
 
 func TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent(t *testing.T) {
 	newGame()
-	f, err := os.OpenFile("1000000-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-	if err != nil {
-		panic(err)
-	}
+	//f, err := os.OpenFile("1000000-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	defer f.Close()
+	//defer f.Close()
 
 	for i := 0; i < 1000000; i++ {
 		globalGame.Round = globalGame.Round + 1
@@ -264,10 +262,10 @@ func TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent(t *testing.T) 
 		_, _ = globalGame.FindRoundWinner()
 		globalGame.CalculateWinRatings()
 
-		text := strconv.Itoa(globalGame.Players[0].DiceRolls[0]) + strconv.Itoa(globalGame.Players[0].DiceRolls[1]) + "-" + strconv.Itoa(globalGame.Players[1].DiceRolls[0]) + strconv.Itoa(globalGame.Players[1].DiceRolls[1]) + "\n"
-		if _, err = f.WriteString(text); err != nil {
-			panic(err)
-		}
+		//text := strconv.Itoa(globalGame.Players[0].CurrentDice[0]) + strconv.Itoa(globalGame.Players[0].CurrentDice[1]) + "-" + strconv.Itoa(globalGame.Players[1].CurrentDice[0]) + strconv.Itoa(globalGame.Players[1].CurrentDice[1]) + "\n"
+		//if _, err = f.WriteString(text); err != nil {
+		//	panic(err)
+		//}
 	}
 
 	if globalGame.WinRatings[0] < 0.60 || globalGame.WinRatings[0] > 0.80 {
@@ -305,7 +303,7 @@ func BenchmarkDiceRoll(b *testing.B) {
 
 	max := 6
 	p := game.Player{}
-	p.DiceRolls = make(map[int]int)
+	p.CurrentDice = make(map[int]int)
 
 	for n := 0; n < b.N; n++ {
 		p.RollDice(max)
