@@ -1,6 +1,13 @@
 # Cheat Dice
 A game of dice against the computer where the computer can be configured to sustain a certain win rate.
 
+# Multiplayer support ?
+- yup.
+
+# Can the Human player cheat ?
+- absolutely.
+If you set your player name to "AlphaDice" the computer will help you win
+
 # Installing 
 - go get github.com/zkynet/cheatdice
 
@@ -33,6 +40,9 @@ When it is the computers turn, it will roll a dice (dice inception intended) to 
 1. This kind of cheating does not rely on reading the apponents dice, thus there is no 1-1 relation between the human dice roll and the cheat methods.
 2. The cheating interval, win percentage and number of cheating method can be adjusted for each game. This makes it even more difficult to detect if optimized properly. 
 
+## Small footnotes on cheating
+The higher the difficulty of the game the harder it is to achive high win percentages while making it seem random. For example if the player count goes from 2 to 4 you will see about 20% lesser win rate then the rate you set it for. Same goes for the number of cheat methods, how often you can cheat in a row and what round you start cheating on. All of these settings affect the win rate and can be tuned in various ways.
+
 # How to adjust cheat rate
 ```
 type Game struct {
@@ -57,9 +67,9 @@ globalGame.NumberOfCheatMethods = 3
 ```
 output
 ```
-=== RUN   TestWinningPercentage1000000Rounds
+=== RUN   TestCheating70PercentWin5PercentError1MillionRounds
 Win rating: 0.699997
---- PASS: TestWinningPercentage1000000Rounds (10.14s)
+--- PASS: TestCheating70PercentWin5PercentError1MillionRounds (10.14s)
 ```
 # 1.000.000 game test with 80% win rate
 settings
@@ -120,16 +130,16 @@ globalGame.NumberOfCheatMethods = 3
 ```
 output
 ```
-=== RUN   TestWinningPercentage100Rounds
+=== RUN   TestCheating70PercentWin10PercentError100Rounds
 Win rating: 0.67
---- PASS: TestWinningPercentage100Rounds (0.00s)
+--- PASS: TestCheating70PercentWin10PercentError100Rounds (0.00s)
 ```
 
 # Example test suit output
 ```
-zkynets-MacBook-Pro:cheatdice zkynet$ go test -v --bench=.
+zkynets-MacBook-Pro:cheatdice zkynet$ go test -v -bench=.
 === RUN   TestDiceRoll3000000TimesMax6
---- PASS: TestDiceRoll3000000TimesMax6 (2.96s)
+--- PASS: TestDiceRoll3000000TimesMax6 (2.89s)
 === RUN   TestDiceRollWithATie
 === RUN   TestDiceRollWithATie/Players_tie
 === RUN   TestDiceRollWithATie/Players_tie#01
@@ -162,19 +172,24 @@ zkynets-MacBook-Pro:cheatdice zkynet$ go test -v --bench=.
     --- PASS: TestDiceRollWinMethodDouble/Player_1_wins_with_a_double (0.00s)
     --- PASS: TestDiceRollWinMethodDouble/Player_0_wins_with_a_higher_double (0.00s)
     --- PASS: TestDiceRollWinMethodDouble/Player_1_wins_with_a_higher_double (0.00s)
-=== RUN   TestWinningPercentage100Rounds70WinRatingWithIn10Percent
---- PASS: TestWinningPercentage100Rounds70WinRatingWithIn10Percent (0.00s)
-=== RUN   TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent
---- PASS: TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent (10.95s)
-=== RUN   TestWinningPercentage1000000Rounds70WinRatingWithIn5Percent
---- PASS: TestWinningPercentage1000000Rounds70WinRatingWithIn5Percent (3.38s)
+=== RUN   TestCheating70PercentWin10PercentError100Rounds
+--- PASS: TestCheating70PercentWin10PercentError100Rounds (0.00s)
+=== RUN   TestCheating70PercentWin10PercentError1MillionRounds
+--- PASS: TestCheating70PercentWin10PercentError1MillionRounds (3.38s)
+=== RUN   TestCheating70PercentWin5PercentError1MillionRounds
+--- PASS: TestCheating70PercentWin5PercentError1MillionRounds (3.34s)
+=== RUN   TestMultiplayerCheating50PercentWin10PercentError1MillionRounds
+--- PASS: TestMultiplayerCheating50PercentWin10PercentError1MillionRounds (5.70s)
+=== RUN   TestMultiplayerCheating50PercentWin5PercentError1MillionRounds
+--- PASS: TestMultiplayerCheating50PercentWin5PercentError1MillionRounds (5.74s)
 goos: darwin
 goarch: amd64
 pkg: github.com/zkynet/cheatdice
-BenchmarkDiceRoll-4      2000000               960 ns/op
+Benchmark4PlayerGame-4            200000              5699 ns/op
+Benchmark2PlayerGame-4            500000              3368 ns/op
+BenchmarkDiceRoll-4              2000000               931 ns/op
 PASS
-ok      github.com/zkynet/cheatdice     20.172s
-zkynets-MacBook-Pro:cheatdice zkynet$
+ok      github.com/zkynet/cheatdice     26.806s
 ```
 
 # Roll log for 100 games 
