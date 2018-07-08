@@ -42,7 +42,7 @@ func main() {
 	globalGame.CheatCounter = 0
 	globalGame.FirstCheatRound = 1
 	globalGame.WinningPercent = 0.7
-	globalGame.CheatsInARow = 2
+	globalGame.CheatsInARow = 0
 	globalGame.NumberOfCheatMethods = 3
 
 	for i := 0; i < playerCountAsInt; i++ {
@@ -57,7 +57,7 @@ func main() {
 			Wins:        0,
 			Rolls:       0,
 			IsComputer:  false,
-			IsCheater:   true,
+			IsCheater:   false,
 			CurrentDice: make(map[int]int),
 		}
 
@@ -99,10 +99,10 @@ NEXTROUND:
 
 	// roll for all players
 	for i := 0; i < len(globalGame.Players); i++ {
+		fmt.Println("Next up: ", globalGame.Players[globalGame.CurrentRoller].Name)
 		globalGame.AskPlayerToRoll()
 		printDiceRollForPlayer(globalGame.CurrentRoller)
 		globalGame.SwitchPlayers()
-
 	}
 
 	globalGame.SwitchStartingPlayer()
