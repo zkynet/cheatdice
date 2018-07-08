@@ -65,7 +65,7 @@ func (g *Game) Cheat() bool {
 	case 1:
 		//fmt.Println(currentRoller.Name, " is cheating with a double")
 		currentRoller.RollDice(6)
-		if currentRoller.DiceRolls[0] > 5 {
+		if currentRoller.DiceRolls[0] > 4 {
 			currentRoller.DiceRolls[0]--
 		}
 		currentRoller.DiceRolls[0] = currentRoller.DiceRolls[1]
