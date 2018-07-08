@@ -21,6 +21,37 @@ type Game struct {
 	NumberOfCheatMethods int             // how many methods should be used to cheat ?
 }
 
+func (g *Game) CreateHumanPlayer(indexNumber int, promptMessage string) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println(promptMessage)
+	name, _, err := reader.ReadLine()
+	if err != nil {
+		fmt.Println("Could not parse the player name, err:", err)
+		os.Exit(1)
+	}
+
+	g.Players[indexNumber] = &Player{
+		Name:        string(name),
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  false,
+		IsCheater:   false,
+		CurrentDice: make(map[int]int),
+	}
+
+}
+
+func (g *Game) CreateComputerPlayer(indexNumer int, name string) {
+	g.Players[indexNumer] = &Player{
+		Name:        name,
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   false,
+		CurrentDice: make(map[int]int),
+	}
+}
+
 func (g *Game) AskPlayerToRoll() {
 
 	if !g.Players[g.CurrentRoller].IsComputer {
