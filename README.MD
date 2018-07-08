@@ -5,7 +5,7 @@ A game of dice against the computer where the computer can be configured to sust
 - yup.
 
 # Can the Human player cheat ?
-- absolutely.
+- absolutely.<br><br>
 If you set your player name to "AlphaDice" the computer will help you win
 
 # Installing 
