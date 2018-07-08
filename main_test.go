@@ -24,10 +24,61 @@ func newGame() {
 		IsCheater:   false,
 		CurrentDice: make(map[int]int),
 	}
+	globalGame = nil
 	globalGame = &game.Game{}
 	globalGame.InitGame()
 	globalGame.Players[0] = &computer0
 	globalGame.Players[1] = &computer1
+	globalGame.CheatCounter = 0
+	globalGame.FirstCheatRound = 1
+	globalGame.WinningPercent = 0.7
+	globalGame.CheatsInARow = 0
+	globalGame.NumberOfCheatMethods = 3
+}
+
+func newMultiplayerGame() {
+	computer0 := game.Player{
+		Name:        "AlphaDice0",
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   true,
+		CurrentDice: make(map[int]int),
+	}
+
+	computer1 := game.Player{
+		Name:        "AlphaDice1",
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   false,
+		CurrentDice: make(map[int]int),
+	}
+
+	computer2 := game.Player{
+		Name:        "AlphaDice2",
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   false,
+		CurrentDice: make(map[int]int),
+	}
+
+	computer3 := game.Player{
+		Name:        "AlphaDice3",
+		Wins:        0,
+		Rolls:       0,
+		IsComputer:  true,
+		IsCheater:   false,
+		CurrentDice: make(map[int]int),
+	}
+	globalGame = nil
+	globalGame = &game.Game{}
+	globalGame.InitGame()
+	globalGame.Players[0] = &computer0
+	globalGame.Players[1] = &computer1
+	globalGame.Players[2] = &computer2
+	globalGame.Players[3] = &computer3
 	globalGame.CheatCounter = 0
 	globalGame.FirstCheatRound = 1
 	globalGame.WinningPercent = 0.7
@@ -211,7 +262,7 @@ func TestDiceRollWinMethodDouble(t *testing.T) {
 
 }
 
-func TestWinningPercentage100Rounds70WinRatingWithIn10Percent(t *testing.T) {
+func TestCheating70PercentWin10PercentError100Rounds(t *testing.T) {
 	newGame()
 	//f, err := os.OpenFile("100-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	//if err != nil {
@@ -221,11 +272,13 @@ func TestWinningPercentage100Rounds70WinRatingWithIn10Percent(t *testing.T) {
 	//defer f.Close()
 
 	for i := 0; i < 100; i++ {
-		globalGame.Round = globalGame.Round + 1
+		globalGame.StartRound()
 		globalGame.ResetAllDice()
-		globalGame.AskPlayerToRoll()
-		globalGame.SwitchPlayers()
-		globalGame.AskPlayerToRoll()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
 		_, _ = globalGame.FindRoundWinner()
 		globalGame.CalculateWinRatings()
 
@@ -244,7 +297,7 @@ func TestWinningPercentage100Rounds70WinRatingWithIn10Percent(t *testing.T) {
 
 }
 
-func TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent(t *testing.T) {
+func TestCheating70PercentWin10PercentError1MillionRounds(t *testing.T) {
 	newGame()
 	//f, err := os.OpenFile("1000000-round-roll-log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	//if err != nil {
@@ -254,11 +307,13 @@ func TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent(t *testing.T) 
 	//defer f.Close()
 
 	for i := 0; i < 1000000; i++ {
-		globalGame.Round = globalGame.Round + 1
+		globalGame.StartRound()
 		globalGame.ResetAllDice()
-		globalGame.AskPlayerToRoll()
-		globalGame.SwitchPlayers()
-		globalGame.AskPlayerToRoll()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
 		_, _ = globalGame.FindRoundWinner()
 		globalGame.CalculateWinRatings()
 
@@ -277,17 +332,19 @@ func TestWinningPercentage1000000Rounds70WinRatingWithIn10Percent(t *testing.T) 
 
 }
 
-func TestWinningPercentage1000000Rounds70WinRatingWithIn5Percent(t *testing.T) {
+func TestCheating70PercentWin5PercentError1MillionRounds(t *testing.T) {
 	newGame()
+
 	for i := 0; i < 1000000; i++ {
-		globalGame.Round = globalGame.Round + 1
+		globalGame.StartRound()
 		globalGame.ResetAllDice()
-		globalGame.AskPlayerToRoll()
-		globalGame.SwitchPlayers()
-		globalGame.AskPlayerToRoll()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
 		_, _ = globalGame.FindRoundWinner()
 		globalGame.CalculateWinRatings()
-
 	}
 
 	if globalGame.WinRatings[0] < 0.65 || globalGame.WinRatings[0] > 0.75 {
@@ -296,6 +353,88 @@ func TestWinningPercentage1000000Rounds70WinRatingWithIn5Percent(t *testing.T) {
 	}
 
 	//fmt.Println("Win rating:", globalGame.WinRatings[0])
+
+}
+
+func TestMultiplayerCheating50PercentWin10PercentError1MillionRounds(t *testing.T) {
+	newMultiplayerGame()
+
+	for i := 0; i < 1000000; i++ {
+		globalGame.StartRound()
+		globalGame.ResetAllDice()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
+		_, _ = globalGame.FindRoundWinner()
+		globalGame.CalculateWinRatings()
+	}
+
+	if globalGame.WinRatings[0] < 0.40 || globalGame.WinRatings[0] > 0.60 {
+		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
+		t.Fail()
+	}
+
+	//fmt.Println("Win rating:", globalGame.WinRatings[0])
+
+}
+
+func TestMultiplayerCheating50PercentWin5PercentError1MillionRounds(t *testing.T) {
+	newMultiplayerGame()
+
+	for i := 0; i < 1000000; i++ {
+		globalGame.StartRound()
+		globalGame.ResetAllDice()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
+		_, _ = globalGame.FindRoundWinner()
+		globalGame.CalculateWinRatings()
+	}
+
+	if globalGame.WinRatings[0] < 0.45 || globalGame.WinRatings[0] > 0.55 {
+		t.Error("Win rating was:", globalGame.WinRatings[0], "wanted a value between 0.6 and 0.8")
+		t.Fail()
+	}
+
+	//fmt.Println("Win rating:", globalGame.WinRatings[0])
+
+}
+
+func Benchmark4PlayerGame(b *testing.B) {
+	newMultiplayerGame()
+
+	for n := 0; n < b.N; n++ {
+		globalGame.StartRound()
+		globalGame.ResetAllDice()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
+		_, _ = globalGame.FindRoundWinner()
+		globalGame.CalculateWinRatings()
+	}
+
+}
+
+func Benchmark2PlayerGame(b *testing.B) {
+	newGame()
+
+	for n := 0; n < b.N; n++ {
+		globalGame.StartRound()
+		globalGame.ResetAllDice()
+		for i := 0; i < len(globalGame.Players); i++ {
+			globalGame.AskPlayerToRoll()
+			globalGame.SwitchPlayers()
+		}
+		globalGame.SwitchStartingPlayer()
+		_, _ = globalGame.FindRoundWinner()
+		globalGame.CalculateWinRatings()
+	}
 
 }
 

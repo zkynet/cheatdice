@@ -60,6 +60,11 @@ func main() {
 			IsCheater:   true,
 			CurrentDice: make(map[int]int),
 		}
+
+		if string(name) == "AlphaDice" {
+			player.IsCheater = true
+		}
+
 		globalGame.Players[i] = &player
 	}
 
