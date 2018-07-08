@@ -91,7 +91,12 @@ func (g *Game) Cheat() bool {
 	case 3:
 		//fmt.Println(currentRoller.Name, " is cheating with the highest dice")
 		currentRoller.RollDice(6)
-		currentRoller.DiceRolls[0] = 5
+		if currentRoller.DiceRolls[0] > 3 {
+			currentRoller.DiceRolls[0] = 5
+		} else {
+			currentRoller.DiceRolls[1] = 5
+		}
+
 		break
 	}
 
